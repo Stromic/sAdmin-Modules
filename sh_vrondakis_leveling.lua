@@ -1,6 +1,6 @@
 sAdmin.addCommand({
     name = "setlevel",
-    category = "DarkRP",
+    category = "Leveling System",
     inputs = {{"player", "player_name"}, {"numeric", "amount"}},
     func = function(ply, args, silent)
         local targets = sAdmin.getTargets("setlevel", ply, args[1], 1)
@@ -16,11 +16,28 @@ sAdmin.addCommand({
 })
 
 sAdmin.addCommand({
-    name = "setxp",
-    category = "DarkRP",
+    name = "addlevel",
+    category = "Leveling System",
     inputs = {{"player", "player_name"}, {"numeric", "amount"}},
     func = function(ply, args, silent)
         local targets = sAdmin.getTargets("setlevel", ply, args[1], 1)
+        local level = tonumber(args[2]) or 0
+
+        for k,v in ipairs(targets) do
+            v:setXP(0)
+            v:setLevel(v:getLevel() + level)
+        end
+
+        sAdmin.msg(silent and ply or nil, "addlevel_response", ply, level, targets)
+    end
+})
+
+sAdmin.addCommand({
+    name = "setxp",
+    category = "Leveling System",
+    inputs = {{"player", "player_name"}, {"numeric", "amount"}},
+    func = function(ply, args, silent)
+        local targets = sAdmin.getTargets("setxp", ply, args[1], 1)
         local xp = tonumber(args[2]) or 0
 
         for k,v in ipairs(targets) do
@@ -33,10 +50,10 @@ sAdmin.addCommand({
 
 sAdmin.addCommand({
     name = "addxp",
-    category = "DarkRP",
+    category = "Leveling System",
     inputs = {{"player", "player_name"}, {"numeric", "amount"}},
     func = function(ply, args, silent)
-        local targets = sAdmin.getTargets("setlevel", ply, args[1], 1)
+        local targets = sAdmin.getTargets("addxp", ply, args[1], 1)
         local xp = tonumber(args[2]) or 0
 
         for k,v in ipairs(targets) do
@@ -49,5 +66,6 @@ sAdmin.addCommand({
 
 
 slib.setLang("sadmin", "en", "setlevel_response", "%s set %s's level to %s.")
+slib.setLang("sadmin", "en", "addlevel_response", "%s added %s levels to %s.")
 slib.setLang("sadmin", "en", "setxp_response", "%s set %s's XP to %s.")
 slib.setLang("sadmin", "en", "addxp_response", "%s added %s XP to %s.")
