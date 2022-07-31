@@ -1,4 +1,4 @@
-local function storeSecondaryUsergroup(sid64, new_rank, time, no_save)
+local function storeSecondaryRank(sid64, new_rank, time, no_save)
     local ply = slib.sid64ToPly[sid64]
 
     if !no_save then
@@ -15,7 +15,7 @@ local function storeSecondaryUsergroup(sid64, new_rank, time, no_save)
         ply:SetNWString("sA:SecondaryRank", new_rank)
 
         if time and time > 0 then
-            timer.Create("sA:RevertSecondaryRank", time, 1, function() storeSecondaryUsergroup(sid64, "") end)
+            timer.Create("sA:RevertSecondaryRank", time, 1, function() storeSecondaryRank(sid64, "") end)
         end
     end
 end
@@ -33,7 +33,7 @@ sAdmin.addCommand({
         for k,v in ipairs(targets) do
             local sid64 = v:SteamID64()
 
-            storeSecondaryUsergroup(sid64, rank, time)
+            storeSecondaryRank(sid64, rank, time)
         end
 
         sAdmin.msg(silent and ply or nil, "setsecondaryrank_response", ply, targets, rank, time)
@@ -52,7 +52,7 @@ sAdmin.addCommand({
         if !rank or !time then sAdmin.msg(ply, "invalid_arguments") return end
         if !sAdmin.usergroups[rank] then sAdmin.msg(ply, "invalid_usergroup") return end
 
-        storeSecondaryUsergroup(sid64, rank, time)
+        storeSecondaryRank(sid64, rank, time)
 
         sAdmin.msg(silent and ply or nil, "setsecondaryrankid_response", ply, sid64, rank, time)
     end
@@ -69,7 +69,7 @@ sAdmin.addCommand({
         for k,v in ipairs(targets) do
             local sid64 = v:SteamID64()
 
-            storeSecondaryUsergroup(sid64, "")
+            storeSecondaryRank(sid64, "")
         end
 
         sAdmin.msg(silent and ply or nil, "removesecondaryrank_response", ply, targets)
@@ -88,7 +88,7 @@ sAdmin.addCommand({
         if !rank or !time then sAdmin.msg(ply, "invalid_arguments") return end
         if !sAdmin.usergroups[rank] then sAdmin.msg(ply, "invalid_usergroup") return end
 
-        storeSecondaryUsergroup(sid64, "", time)
+        storeSecondaryRank(sid64, "", time)
 
         sAdmin.msg(silent and ply or nil, "removesecondaryrankid_response", ply, sid64)
     end
@@ -107,10 +107,10 @@ hook.Add("slib.FullLoaded", "sA:LoadSecondaryRank", function(ply)
             local timeLeft = tbl.expiry - os.time()
 
             if tbl.expiry > 0 and timeLeft <= 0 then
-                storeSecondaryUsergroup(sid64, "")
+                storeSecondaryRank(sid64, "")
             return end
 
-            storeSecondaryUsergroup(sid64, tbl.rank, timeLeft, true)
+            storeSecondaryRank(sid64, tbl.rank, timeLeft, true)
         end
     end
 end)
