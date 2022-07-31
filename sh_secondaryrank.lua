@@ -119,3 +119,7 @@ slib.setLang("sadmin", "en", "setsecondaryrank_response", "%s set the secondary 
 slib.setLang("sadmin", "en", "setsecondaryrankid_response", "%s set the secondary rank for %s to %s for %t.")
 slib.setLang("sadmin", "en", "removesecondaryrank_response", "%s removed %s's secondary rank.")
 slib.setLang("sadmin", "en", "removesecondaryrankid_response", "%s removed %s's secondary rank.")
+
+slib.setLang("sadmin", "en", "setrank_help", "This will set the secondary rank of a specified player!")
+slib.setLang("sadmin", "en", "setrankid_help", "This will set the secondary rank of a specified steamid64!")
+slib.setLang("sadmin", "en", "removeuser_help", "This will reset the secondary rank of a specified player!")
