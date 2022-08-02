@@ -163,7 +163,7 @@ hook.Add("PostGamemodeLoaded", "sA:LoadTTT", function()
                 sAdmin.TTT.SlayNR[v] = to_add and sAdmin.TTT.SlayNR[v] + amount or sAdmin.TTT.SlayNR[v] - amount
             end
 
-            sAdmin.msg(silent and ply or nil, "slaynr_response", ply, targets, sAdmin.TTT.SlayNR[v])
+            sAdmin.msg(silent and ply or nil, to_add == 0 and "slaynr_response" or "slaynr_take_response", ply, amount, targets)
         end
     })
 
@@ -206,7 +206,8 @@ hook.Add("PostGamemodeLoaded", "sA:LoadTTT", function()
     slib.setLang("sadmin", "en", "addkarma_response", "%s added %s to %s's karma.")
     slib.setLang("sadmin", "en", "setcredits_response", "%s set %s's credits to %s.")
     slib.setLang("sadmin", "en", "addcredits_response", "%s added %s to %s's credits.")
-    slib.setLang("sadmin", "en", "slaynr_response", "%s set %s to be slayed for the next %s round(s).")
+    slib.setLang("sadmin", "en", "slaynr_response", "%s added %s slays to %s.")
+    slib.setLang("sadmin", "en", "slaynr_take_response", "%s removed %s slays from %s.")
     slib.setLang("sadmin", "en", "roundrestart_response", "%s restarted the round.")
 
     slib.setLang("sadmin", "en", "swap_help", "This will swap the targetted players role to specified role or next role.")
