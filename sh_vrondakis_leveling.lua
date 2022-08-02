@@ -69,3 +69,8 @@ slib.setLang("sadmin", "en", "setlevel_response", "%s set %s's level to %s.")
 slib.setLang("sadmin", "en", "addlevel_response", "%s added %s levels to %s.")
 slib.setLang("sadmin", "en", "setxp_response", "%s set %s's XP to %s.")
 slib.setLang("sadmin", "en", "addxp_response", "%s added %s XP to %s.")
+
+slib.setLang("sadmin", "en", "setlevel_help", "Set the level of a specified player.")
+slib.setLang("sadmin", "en", "addlevel_help", "Add level(s) to specified player.")
+slib.setLang("sadmin", "en", "setxp_help", "Set the XP of a specified player.")
+slib.setLang("sadmin", "en", "addxp_help", "Add XP to specified player.")
