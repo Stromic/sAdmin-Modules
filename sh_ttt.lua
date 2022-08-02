@@ -8,6 +8,12 @@ local roles = {
     ["detective"] = ROLE_DETECTIVE
 }
 
+local rolesToTxt = {
+    [ROLE_INNOCENT] = "Innocent",
+    [ROLE_TRAITOR] = "Traitor",
+    [ROLE_DETECTIVE] = "Detective"
+}
+
 sAdmin.addCommand({
     name = "swap",
     category = "TTT",
@@ -15,17 +21,19 @@ sAdmin.addCommand({
     func = function(ply, args, silent)
         local targets = sAdmin.getTargets("swap", ply, args[1], 1)
         local role = args[2]
+        local roleSelected = ""
 
         for k,v in ipairs(targets) do
             local nextRole = ((tonumber(v:GetRole()) or -1) + 1)
             nextRole = nextRole > 2 and 0 or nextRole
 
+            roleSelected = rolesToTxt[role and roles[string.lower(role)] or nextRole]
             v:SetRole(role and roles[string.lower(role)] or nextRole)
         end
 
         SendFullStateUpdate()
 
-        sAdmin.msg(silent and ply or nil, "swap_response", ply, amount, steamId)
+        sAdmin.msg(silent and ply or nil, "swap_response", ply, targets, roleSelected)
     end
 })
 
@@ -50,7 +58,7 @@ sAdmin.addCommand({
              v:SetRagdollSpec(false)
         end
         
-        sAdmin.msg(silent and ply or nil, "tospec_response", ply, amount, steamId)
+        sAdmin.msg(silent and ply or nil, "tospec_response", ply, targets)
     end
 })
 
@@ -66,7 +74,7 @@ sAdmin.addCommand({
             ply:SetForceSpec(false)
         end
         
-        sAdmin.msg(silent and ply or nil, "unspec_response", ply, amount, steamId)
+        sAdmin.msg(silent and ply or nil, "unspec_response", ply, targets)
     end
 })
 
@@ -102,7 +110,7 @@ sAdmin.addCommand({
             KARMA.ApplyKarma(v)
         end
 
-        sAdmin.msg(silent and ply or nil, "addkarma_response", ply, targets, amount)
+        sAdmin.msg(silent and ply or nil, "addkarma_response", ply, amount, targets)
     end
 })
 
@@ -135,7 +143,7 @@ sAdmin.addCommand({
             v:AddCredits(amount)
         end
 
-        sAdmin.msg(silent and ply or nil, "addcredits_response", ply, targets, amount)
+        sAdmin.msg(silent and ply or nil, "addcredits_response", ply, amount, targets)
     end
 })
 
@@ -152,7 +160,7 @@ sAdmin.addCommand({
             Admin.TTT.SlayNR[v] = true
         end
 
-        sAdmin.msg(silent and ply or nil, "slaynr_response", ply, targets, amount)
+        sAdmin.msg(silent and ply or nil, "slaynr_response", ply, targets)
     end
 })
 
@@ -163,7 +171,7 @@ sAdmin.addCommand({
     func = function(ply, args, silent)
         BeginRound()
 
-        sAdmin.msg(silent and ply or nil, "roundrestart_response", ply, targets, amount)
+        sAdmin.msg(silent and ply or nil, "roundrestart_response", ply)
     end
 })
 
@@ -190,11 +198,11 @@ end)
 
 slib.setLang("sadmin", "en", "swap_response", "%s set %s's role to %s.")
 slib.setLang("sadmin", "en", "tospec_response", "%s set %s to spectator.")
-slib.setLang("sadmin", "en", "unspec_response", "%s unset %s to spectator.")
+slib.setLang("sadmin", "en", "unspec_response", "%s unset %s from spectator.")
 slib.setLang("sadmin", "en", "setkarma_response", "%s set %s's karma to %s.")
-slib.setLang("sadmin", "en", "addkarma_response", "%s added to %s's karma.")
+slib.setLang("sadmin", "en", "addkarma_response", "%s added %s to %s's karma.")
 slib.setLang("sadmin", "en", "setcredits_response", "%s set %s's credits to %s.")
-slib.setLang("sadmin", "en", "addcredits_response", "%s added to %s's credits.")
+slib.setLang("sadmin", "en", "addcredits_response", "%s added %s to %s's credits.")
 slib.setLang("sadmin", "en", "slaynr_response", "%s set %s to be slayed next round.")
 slib.setLang("sadmin", "en", "roundrestart_response", "%s restarted the round.")
 
