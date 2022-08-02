@@ -159,7 +159,7 @@ hook.Add("PostGamemodeLoaded", "sA:LoadTTT", function()
             local to_add = tonumber(args[3]) or 0
 
             for k,v in ipairs(targets) do
-                sAdmin.TTT.SlayNR[v] = sAdmin.TTT.SlayNR[v] or {}
+                sAdmin.TTT.SlayNR[v] = sAdmin.TTT.SlayNR[v] or 0
                 sAdmin.TTT.SlayNR[v] = to_add and sAdmin.TTT.SlayNR[v] + amount or sAdmin.TTT.SlayNR[v] - amount
             end
 
