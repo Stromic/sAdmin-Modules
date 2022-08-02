@@ -101,3 +101,8 @@ slib.setLang("sadmin", "en", "ps2_addpoints_steamid_response", "%s added %s poin
 slib.setLang("sadmin", "en", "ps2_addpremiumpoints_steamid_response", "%s added %s premium points to %s.")
 slib.setLang("sadmin", "en", "ps2_addpoints_response", "%s added %s points to %s.")
 slib.setLang("sadmin", "en", "ps2_addpremiumpoints_response", "%s added %s premium points to %s.")
+
+slib.setLang("sadmin", "en", "ps2_addpoints_steamid_help", "Add points to specified SteamID.")
+slib.setLang("sadmin", "en", "ps2_addpremiumpoints_steamid_help", "Add premium points to specified SteamID.")
+slib.setLang("sadmin", "en", "ps2_addpoints_help", "Add points to specified player.")
+slib.setLang("sadmin", "en", "ps2_addpremiumpoints_help", "Add premium points to specified player.")
