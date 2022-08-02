@@ -170,7 +170,7 @@ hook.Add("PostGamemodeLoaded", "sA:LoadTTT", function()
         category = "TTT",
         inputs = {{"player", "player_name"}},
         func = function(ply, args, silent)
-            BeginRound()
+            RunConsoleCommand("ttt_roundrestart")
 
             sAdmin.msg(silent and ply or nil, "roundrestart_response", ply)
         end
