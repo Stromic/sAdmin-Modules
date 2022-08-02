@@ -194,7 +194,7 @@ hook.Add("PostGamemodeLoaded", "sA:LoadTTT", function()
             end
         end
 
-        Admin.TTT.SlayNR = {}
+        sAdmin.TTT.SlayNR = {}
     end)
 
     slib.setLang("sadmin", "en", "swap_response", "%s set %s's role to %s.")
