@@ -152,16 +152,18 @@ hook.Add("PostGamemodeLoaded", "sA:LoadTTT", function()
     sAdmin.addCommand({
         name = "slaynr",
         category = "TTT",
-        inputs = {{"player", "player_name"}},
+        inputs = {{"player", "player_name"}, {"numeric", "amount"}, {"numeric", "to_add"}},
         func = function(ply, args, silent)
             local targets = sAdmin.getTargets("slaynr", ply, args[1], 1)
             local amount = tonumber(args[2]) or 0
+            local to_add = tonumber(args[3]) or 0
 
             for k,v in ipairs(targets) do
-                Admin.TTT.SlayNR[v] = true
+                Admin.TTT.SlayNR[v] = Admin.TTT.SlayNR[v] or {}
+                Admin.TTT.SlayNR[v] = to_add and Admin.TTT.SlayNR[v] + amount or Admin.TTT.SlayNR[v] - amount
             end
 
-            sAdmin.msg(silent and ply or nil, "slaynr_response", ply, targets)
+            sAdmin.msg(silent and ply or nil, "slaynr_response", ply, targets, Admin.TTT.SlayNR[v])
         end
     })
 
@@ -189,12 +191,12 @@ hook.Add("PostGamemodeLoaded", "sA:LoadTTT", function()
 
     hook.Add("TTTBeginRound", "sA:KillNextRound", function()
         for k,v in pairs(sAdmin.TTT.SlayNR) do
-            if IsValid(k) then
+            if IsValid(k) and v > 0 then
                 k:Kill()
+
+                sAdmin.TTT.SlayNR[k] = sAdmin.TTT.SlayNR[k] - 1 > 0 and sAdmin.TTT.SlayNR[k] - 1 or nil
             end
         end
-
-        sAdmin.TTT.SlayNR = {}
     end)
 
     slib.setLang("sadmin", "en", "swap_response", "%s set %s's role to %s.")
@@ -204,7 +206,7 @@ hook.Add("PostGamemodeLoaded", "sA:LoadTTT", function()
     slib.setLang("sadmin", "en", "addkarma_response", "%s added %s to %s's karma.")
     slib.setLang("sadmin", "en", "setcredits_response", "%s set %s's credits to %s.")
     slib.setLang("sadmin", "en", "addcredits_response", "%s added %s to %s's credits.")
-    slib.setLang("sadmin", "en", "slaynr_response", "%s set %s to be slayed next round.")
+    slib.setLang("sadmin", "en", "slaynr_response", "%s set %s to be slayed for the next %s round(s).")
     slib.setLang("sadmin", "en", "roundrestart_response", "%s restarted the round.")
 
     slib.setLang("sadmin", "en", "swap_help", "This will swap the targetted players role to specified role or next role.")
