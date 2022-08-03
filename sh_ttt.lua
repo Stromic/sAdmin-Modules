@@ -170,7 +170,7 @@ hook.Add("PostGamemodeLoaded", "sA:LoadTTT", function()
             local amount = tonumber(args[2]) or 0
 
             for k,v in ipairs(targets) do
-                v:SetPData("sA:SlaysNR", ply:GetPData("sA:SlaysNR", 0) + amount)
+                v:SetPData("sA:SlaysNR", v:GetPData("sA:SlaysNR", 0) + amount)
             end
 
             sAdmin.msg(silent and ply or nil, "addslaynr_response", ply, amount, targets)
