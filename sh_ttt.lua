@@ -1,8 +1,4 @@
 hook.Add("PostGamemodeLoaded", "sA:LoadTTT", function()    
-    sAdmin = sAdmin or {}
-    sAdmin.TTT = sAdmin.TTT or {}
-    sAdmin.TTT.SlayNR = sAdmin.TTT.SlayNR or {}
-
     local roles = {
         ["innocent"] = ROLE_INNOCENT,
         ["traitor"] = ROLE_TRAITOR,
@@ -150,20 +146,34 @@ hook.Add("PostGamemodeLoaded", "sA:LoadTTT", function()
 
 
     sAdmin.addCommand({
-        name = "slaynr",
+        name = "setslaynr",
         category = "TTT",
-        inputs = {{"player", "player_name"}, {"numeric", "amount"}, {"numeric", "to_add"}},
+        inputs = {{"player", "player_name"}, {"numeric", "amount"},
         func = function(ply, args, silent)
-            local targets = sAdmin.getTargets("slaynr", ply, args[1], 1)
+            local targets = sAdmin.getTargets("setslaynr", ply, args[1], 1)
             local amount = tonumber(args[2]) or 0
-            local to_add = tonumber(args[3]) or 0
 
             for k,v in ipairs(targets) do
-                sAdmin.TTT.SlayNR[v] = sAdmin.TTT.SlayNR[v] or 0
-                sAdmin.TTT.SlayNR[v] = to_add and sAdmin.TTT.SlayNR[v] + amount or sAdmin.TTT.SlayNR[v] - amount
+                v:SetPData("sA:SlaysNR", amount)
             end
 
-            sAdmin.msg(silent and ply or nil, to_add == 0 and "slaynr_response" or "slaynr_take_response", ply, amount, targets)
+            sAdmin.msg(silent and ply or nil, "setslaynr_response", ply, targets, amount)
+        end
+    })
+
+    sAdmin.addCommand({
+        name = "addslaynr",
+        category = "TTT",
+        inputs = {{"player", "player_name"}, {"numeric", "amount"},
+        func = function(ply, args, silent)
+            local targets = sAdmin.getTargets("addslaynr", ply, args[1], 1)
+            local amount = tonumber(args[2]) or 0
+
+            for k,v in ipairs(targets) do
+                v:SetPData("sA:SlaysNR", ply:GetPData("sA:SlaysNR", 0) + amount)
+            end
+
+            sAdmin.msg(silent and ply or nil, "addslaynr_response", ply, amount, targets)
         end
     })
 
@@ -184,17 +194,17 @@ hook.Add("PostGamemodeLoaded", "sA:LoadTTT", function()
 
             for k,v in ipairs(targets) do
                 v:SpawnForRound(true)
-                print(v)
             end
         end
     end)
 
     hook.Add("TTTBeginRound", "sA:KillNextRound", function()
-        for k,v in pairs(sAdmin.TTT.SlayNR) do
-            if IsValid(k) and v > 0 then
-                k:Kill()
+        for k,v in ipairs(player.GetAll()) do
+            local slays = v:GetPData("sA:SlaysNR", 0)
 
-                sAdmin.TTT.SlayNR[k] = sAdmin.TTT.SlayNR[k] - 1 > 0 and sAdmin.TTT.SlayNR[k] - 1 or nil
+            if slays > 0 then
+                v:Kill()
+                v:SetPData("sA:SlaysNR", slays - 1)
             end
         end
     end)
@@ -206,8 +216,8 @@ hook.Add("PostGamemodeLoaded", "sA:LoadTTT", function()
     slib.setLang("sadmin", "en", "addkarma_response", "%s added %s to %s's karma.")
     slib.setLang("sadmin", "en", "setcredits_response", "%s set %s's credits to %s.")
     slib.setLang("sadmin", "en", "addcredits_response", "%s added %s to %s's credits.")
-    slib.setLang("sadmin", "en", "slaynr_response", "%s added %s slays to %s.")
-    slib.setLang("sadmin", "en", "slaynr_take_response", "%s removed %s slays from %s.")
+    slib.setLang("sadmin", "en", "setslaynr_response", "%s set %s to be slayed for the next %s rounds.")
+    slib.setLang("sadmin", "en", "addslaynr_response", "%s added %s next round slays to %s.")
     slib.setLang("sadmin", "en", "roundrestart_response", "%s restarted the round.")
 
     slib.setLang("sadmin", "en", "swap_help", "This will swap the targetted players role to specified role or next role.")
@@ -217,6 +227,7 @@ hook.Add("PostGamemodeLoaded", "sA:LoadTTT", function()
     slib.setLang("sadmin", "en", "addkarma_help", "Adds karma to a specified player.")
     slib.setLang("sadmin", "en", "setcredits_help", "Set the credits of a specified player.")
     slib.setLang("sadmin", "en", "addcredits_help", "Adds credits to a specified player.")
-    slib.setLang("sadmin", "en", "slaynr_help", "Slay a specified player in the next round.")
+    slib.setLang("sadmin", "en", "setslaynr_help", "Set how many rounds to slay specified player.")
+    slib.setLang("sadmin", "en", "addslaynr_help", "Add how many rounds to slay specified player.")
     slib.setLang("sadmin", "en", "roundrestart_help", "Restart the round.")
 end)
