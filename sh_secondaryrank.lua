@@ -115,6 +115,22 @@ hook.Add("slib.FullLoaded", "sA:LoadSecondaryRank", function(ply)
     end
 end)
 
+local meta = FindMetaTable("Player")
+
+function meta:GetSecondaryUserGroup()
+    return self:GetNWString("sA:SecondaryRank", "")
+end
+
+
+function meta:SetSecondaryUserGroup(usergroup, time) -- The time in here is in seconds.
+    if SERVER then
+        storeSecondaryRank(self:SteamID64(), usergroup, time or 0)
+    end
+
+    self:SetNWString("sA:SecondaryRank", usergroup)
+end
+
+
 slib.setLang("sadmin", "en", "setsecondaryrank_response", "%s set the secondary rank for %s to %s for %t.")
 slib.setLang("sadmin", "en", "setsecondaryrankid_response", "%s set the secondary rank for %s to %s for %t.")
 slib.setLang("sadmin", "en", "removesecondaryrank_response", "%s removed %s's secondary rank.")
