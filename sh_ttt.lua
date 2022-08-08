@@ -14,7 +14,7 @@ hook.Add("PostGamemodeLoaded", "sA:LoadTTT", function()
     sAdmin.addCommand({
         name = "swap",
         category = "TTT",
-        inputs = {{"player", "player_name"}, {"text", "model"}},
+        inputs = {{"player", "player_name"}, {"text", "role"}},
         func = function(ply, args, silent)
             local targets = sAdmin.getTargets("swap", ply, args[1], 1)
             local role = args[2]
@@ -180,7 +180,7 @@ hook.Add("PostGamemodeLoaded", "sA:LoadTTT", function()
     sAdmin.addCommand({
         name = "roundrestart",
         category = "TTT",
-        inputs = {{"player", "player_name"}},
+        inputs = {},
         func = function(ply, args, silent)
             RunConsoleCommand("ttt_roundrestart")
 
