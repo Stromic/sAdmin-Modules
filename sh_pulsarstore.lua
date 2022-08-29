@@ -7,7 +7,7 @@ sAdmin.addCommand({
         local amount = tonumber(args[2]) or 0
         
         for k,v in ipairs(targets) do
-            Lyth_Pulsar.GiveCredits(ply, v, amount)
+            Lyth_Pulsar.DB.GiveCredits(ply, v, amount)
         end
 
         sAdmin.msg(silent and ply or nil, "ps_givecredits_response", ply, amount, targets)
@@ -23,7 +23,7 @@ sAdmin.addCommand({
         local amount = tonumber(args[2]) or 0
         
         for k,v in ipairs(targets) do
-            Lyth_Pulsar.RemoveCredits(ply, v, amount)
+            Lyth_Pulsar.DB.GiveCredits(ply, v, -amount)
         end
 
         sAdmin.msg(silent and ply or nil, "ps_removecredits_response", ply, amount, targets)
