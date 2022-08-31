@@ -44,7 +44,7 @@ sAdmin.addCommand({
             end 
         end
 
-        sAdmin.msg(silent and ply or nil, "adminmode_response", ply, targets)
+        sAdmin.msg(silent and ply or nil, "unadminmode_response", ply, targets)
     end
 })
 
