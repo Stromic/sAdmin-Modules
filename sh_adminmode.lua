@@ -1,3 +1,4 @@
+-- Simple adminmode that will god and set the users model on !admin and ungod and restore their old model on !unadmin
 sAdmin.addCommand({
     name = "admin",
     category = "Utility",
