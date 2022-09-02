@@ -48,6 +48,64 @@ sAdmin.addCommand({
     end
 })
 
+if(CLIENT) then
+    local color_white = Color(255,255,255,255)
+    local color_black = Color(0,0,0,150)
+    local color_darkgray = Color(30,30,30,200)
+    local blur = Material("pp/blurscreen")
+
+    local scale = function(num, isY)
+        return num * (isY and (ScrH() / 1080) or (ScrW() / 1920))
+    end
+
+    surface.CreateFont( "JailedFont", {
+        font = "Another Round", --  Use the font-name which is shown to you by your operating system Font Viewer, not the file name
+        extended = false,
+        size = 55,
+        weight = 500,
+        blursize = 0,
+        scanlines = 0,
+        antialias = true,
+        underline = false,
+        italic = false,
+        strikeout = false,
+        symbol = false,
+        rotary = false,
+        shadow = false,
+        additive = false,
+        outline = false,
+    })
+
+    function BlurRect(x, y, w, h, alpha)
+        local X, Y = 0,0
+        surface.SetDrawColor(255,255,255)
+        surface.SetMaterial(blur)
+        for i = 1, 5 do
+            blur:SetFloat("$blur", (i / 4) * 4)
+            blur:Recompute()
+            render.UpdateScreenEffectTexture()
+            render.SetScissorRect( x, y, x + w, y + h, true )
+                surface.DrawTexturedRect( X * -1, Y * -1, ScrW(), ScrH() )
+            render.SetScissorRect( 0, 0, 0, 0, false )
+        end
+        draw.RoundedBox(5,x,y,w,h,Color(0,0,0,alpha))
+    end
+    function adminHUD()
+        local ply = LocalPlayer()
+        local ypos = 800
+        --local jailedreason = ply:GetNWString("prulxjailedreason")
+    
+        if !ply:GetNWString( "is_admined", false) then
+            return
+        elseif ply:GetNWString( "is_admined", false) then
+            --BlurRect(ScrW() / 2 - scale(250), scale(163) + scale(ypos), scale(500), scale(70), 130)
+    
+            draw.SimpleText("Adminmode Enabled", "JailedFont", scale(964), scale(192) - scale(20) + scale(ypos), color_black, 1) -- Jailed Shadow/Outline
+            draw.SimpleText("Adminmode Enabled", "JailedFont", scale(960), scale(188) - scale(20) + scale(ypos), color_white, 1) -- Jailed Text
+        end
+    end
+    hook.Add("HUDPaint", "PRJail_HUD", adminHUD)
+end
 
 slib.setLang("sadmin", "en", "adminmode_response", "%s put %s into adminmode")
 slib.setLang("sadmin", "en", "in_adminmode_response", "%s is already in adminmode!")
