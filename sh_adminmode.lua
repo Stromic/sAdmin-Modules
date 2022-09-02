@@ -48,6 +48,16 @@ sAdmin.addCommand({
     end
 })
 
+local disallow = function(ply)
+    if ply:GetNWString( "is_admined", false) then
+        return false
+    end
+end
+
+for _, v in ipairs({"canBuyCustomEntity","canBuyAmmo","canBuyShipment","canChangeJob","playerCanChangeTeam","canDemote","canDropWeapon","canRequestHit","canRequestWarrant","SAM.CanPlayerSpawn","CanPlayerSuicide","canDropPocketItem"}) do
+hook.Add(v, "Exe_Adminmode", disallow)
+end
+
 if(CLIENT) then
     local color_white = Color(255,255,255,255)
     local color_black = Color(0,0,0,150)
