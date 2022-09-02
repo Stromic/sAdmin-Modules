@@ -54,7 +54,7 @@ local disallow = function(ply)
     end
 end
 
-for _, v in ipairs({"canBuyCustomEntity","canBuyAmmo","canBuyShipment","canChangeJob","playerCanChangeTeam","canDemote","canDropWeapon","canRequestHit","canRequestWarrant","SAM.CanPlayerSpawn","CanPlayerSuicide","canDropPocketItem"}) do
+for _, v in ipairs({"canBuyCustomEntity","canBuyAmmo","canBuyShipment","canChangeJob","playerCanChangeTeam","canDemote","canDropWeapon","canRequestHit","canRequestWarrant","CanPlayerSuicide","canDropPocketItem"}) do
 hook.Add(v, "Exe_Adminmode", disallow)
 end
 
