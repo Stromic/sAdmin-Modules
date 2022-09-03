@@ -47,15 +47,16 @@ sAdmin.addCommand({
         sAdmin.msg(silent and ply or nil, "unadminmode_response", ply, targets)
     end
 })
-
-local disallow = function(ply)
-    if ply:GetNWString( "is_admined", false) then
-        return false
+do
+    local disallow = function(ply)
+        if ply:GetNWString( "is_admined", false) then
+            return false
+        end
     end
-end
 
-for _, v in ipairs({"canBuyCustomEntity","canBuyAmmo","canBuyShipment","canChangeJob","playerCanChangeTeam","canDemote","canDropWeapon","canRequestHit","canRequestWarrant","CanPlayerSuicide","canDropPocketItem"}) do
-hook.Add(v, "Exe_Adminmode", disallow)
+    for _, v in ipairs({"canBuyCustomEntity","canBuyAmmo","canBuyShipment","canChangeJob","playerCanChangeTeam","canDemote","canDropWeapon","canRequestHit","canRequestWarrant","CanPlayerSuicide","canDropPocketItem"}) do
+    hook.Add(v, "Exe_Adminmode", disallow)
+    end
 end
 
 if(CLIENT) then
