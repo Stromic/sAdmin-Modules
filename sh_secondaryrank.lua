@@ -23,7 +23,7 @@ end
 sAdmin.addCommand({
     name = "setsecondaryrank",
     category = "Secondary Rank",
-    inputs = {{"player", "player_name"}, {"text", "rank"}, {"time"}},
+    inputs = {{"player", "player_name"}, {"dropdown", "rank", sAdmin.GetRanks}, {"time"}},
     func = function(ply, args, silent)
         local targets, rank, time = sAdmin.getTargets("setsecondaryrank", ply, args[1], 1), args[2], sAdmin.getTime(args, 3)
 
@@ -43,7 +43,7 @@ sAdmin.addCommand({
 sAdmin.addCommand({
     name = "setsecondaryrankid",
     category = "Management",
-    inputs = {{"text", "sid64/sid"}, {"time"}},
+    inputs = {{"text", "sid64/sid"}, {"dropdown", "rank", sAdmin.GetRanks}, {"time"}},
     func = function(ply, args, silent)
         local sid64 = sAdmin.convertSID64(args[1])
         if !sid64 then return end
