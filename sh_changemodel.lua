@@ -6,9 +6,11 @@ sAdmin.addCommand({
         local mdl = args[1]
 
         if !mdl then 
-            ply:ChatPrint(mdl + " is not found. Are you sure it's a valid model?")
-            return 
-        end
+            ply:ChatPrint(mdl .. " is not found. Are you sure it's a valid model?")
+            return
+        elseif ply:GetNWString("is_admined", false) then
+            ply:ChatPrint("You can not run this command in adminmode!")
+        end 
         
         ply:SetModel(mdl)
 
