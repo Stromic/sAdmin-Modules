@@ -14,6 +14,6 @@ sAdmin.addCommand({
         
         ply:SetModel(mdl)
 
-        ply:ChatPrint("Set model to " + mdl)
+        ply:ChatPrint("Set model to " .. mdl)
     end
 })
