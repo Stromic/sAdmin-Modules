@@ -119,7 +119,7 @@ do  -- if ply:GetNWString( "is_admined", false) then return true end
         end
     end)
     -- overriding the Gprotect physgun pickup
-    hook.Remove( "PhysgunPickup", "sA:AdminPhysgunLogic" )
+    hook.Remove( "PhysgunPickup", "gP:PhysgunPickupLogic" )
     hook.Add("PhysgunPickup", "gP:xAdminmodePhysgunPickupLogic", function(ply, ent, norun)
         if SERVER and !cfg.enabled then return nil end
         if TCF and TCF.Config and ent:GetClass() == "cocaine_cooking_pot" and IsValid( ent:GetParent() ) then return nil end --- Compatibilty with the cocaine factory.
