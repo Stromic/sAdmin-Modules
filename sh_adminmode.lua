@@ -47,6 +47,7 @@ sAdmin.addCommand({
         sAdmin.msg(silent and ply or nil, "unadminmode_response", ply, targets)
     end
 })
+-- adding disallows for when user is in adminmode
 do
     local disallow = function(ply)
         if ply:GetNWString( "is_admined", false) then
@@ -57,9 +58,26 @@ do
     for _, v in ipairs({"canBuyCustomEntity","canBuyAmmo","canBuyShipment","canChangeJob","playerCanChangeTeam","canDemote","canDropWeapon","canRequestHit","canRequestWarrant","CanPlayerSuicide","canDropPocketItem"}) do
     hook.Add(v, "Exe_Adminmode", disallow)
     end
+    
+    -- overriding the sAdmin physgun pickup
+    hook.Remove( "OnPhysgunPickup", "sA:AdminPhysgunPickup" )
+    hook.Add("OnPhysgunPickup", "sA:xAdminmodePhysgunPickup", function(ply, ent)
+        if ent:IsPlayer() and sAdmin.hasPermission(ply, "phys_players") and ply:GetNWString( "is_admined", false) then
+            ent.adminPickedUp = true
+            ent:Lock()
+        end
+    end)
+
+    hook.Remove( "PhysgunPickup", "sA:AdminPhysgunLogic" )
+    hook.Add("PhysgunPickup", "sA:xAdminmodePhysgunLogic", function(ply, ent)
+        if ent:IsPlayer() then
+            return sAdmin.hasPermission(ply, "phys_players") and ply:GetNWString( "is_admined", false) and (tonumber(sAdmin.hasPermission(ply, "immunity")) or 0) >= (tonumber(sAdmin.hasPermission(ent, "immunity")) or 0)
+        end
+    end)
 end
 
 if(CLIENT) then
+    -- Yes this is a repurposed jail hud. sue me :p
     local color_white = Color(255,255,255,255)
     local color_black = Color(0,0,0,150)
     local color_darkgray = Color(30,30,30,200)
@@ -104,15 +122,13 @@ if(CLIENT) then
     function adminHUD()
         local ply = LocalPlayer()
         local ypos = 800
-        --local jailedreason = ply:GetNWString("prulxjailedreason")
-    
         if !ply:GetNWString( "is_admined", false) then
             return
         elseif ply:GetNWString( "is_admined", false) then
             --BlurRect(ScrW() / 2 - scale(250), scale(163) + scale(ypos), scale(500), scale(70), 130)
     
-            draw.SimpleText("Adminmode Enabled", "JailedFont", scale(964), scale(192) - scale(20) + scale(ypos), color_black, 1) -- Jailed Shadow/Outline
-            draw.SimpleText("Adminmode Enabled", "JailedFont", scale(960), scale(188) - scale(20) + scale(ypos), color_white, 1) -- Jailed Text
+            draw.SimpleText("Adminmode Enabled", "JailedFont", scale(964), scale(192) - scale(20) + scale(ypos), color_black, 1) -- Adminmode Shadow/Outline
+            draw.SimpleText("Adminmode Enabled", "JailedFont", scale(960), scale(188) - scale(20) + scale(ypos), color_white, 1) -- Adminmode Text
         end
     end
     hook.Add("HUDPaint", "PRJail_HUD", adminHUD)
