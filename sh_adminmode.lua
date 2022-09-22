@@ -1,4 +1,7 @@
 -- Simple adminmode that will god and set the users model on !admin and ungod and restore their old model on !unadmin
+local cfg = gProtect.GetConfig(nil, "physgunsettings")
+local blacklist = gProtect.GetConfig("blacklist","general")
+
 sAdmin.addCommand({
     name = "admin",
     category = "Utility",
@@ -47,8 +50,49 @@ sAdmin.addCommand({
         sAdmin.msg(silent and ply or nil, "unadminmode_response", ply, targets)
     end
 })
--- adding disallows for when user is in adminmode
-do
+-- rewrite of the physgun permission check in gprotect
+xHandlePhysgunPermission = function(ply, ent)
+    if IsValid(ent) and cfg.blockMultiplePhysgunning and ent.BeingPhysgunned and !table.IsEmpty(ent.BeingPhysgunned) then return false end
+
+    if cfg.enabled then
+        local owner = gProtect.GetOwner(ent)
+
+        if !owner then
+            local result = ent:GetNWString("gPOwner", "")
+            owner = (string.find(result, "STEAM") and "Disconnected") or "World"
+        end
+        
+        local usergroup = ply:GetUserGroup()
+
+        if IsValid(ent) and ent:IsPlayer() then return nil end
+        
+        if !cfg.PickupVehiclePermission[usergroup] and !cfg.PickupVehiclePermission["*"] and !ply:GetNWString( "is_admined", false) then
+            if ent:IsVehicle() then return false end
+        end
+
+        if cfg.blockedEntities[ent:GetClass()] and !cfg.bypassGroups[ply:GetUserGroup()] and !cfg.bypassGroups["*"] and !ply:GetNWString( "is_admined", false) then return false end
+
+        if owner == "World" then
+            if cfg.targetWorld["*"] or cfg.targetWorld[usergroup] then  
+            if ply:GetNWString( "is_admined", false) then return true end
+            end
+        end
+        
+        if !isstring(owner) and IsValid(owner) and owner:IsPlayer() or owner == "Disconnected" then
+            local permGroup = gProtect.PropClasses[ent:GetClass()] and cfg.targetPlayerOwnedProps or cfg.targetPlayerOwned
+            if !permGroup["*"] or !permGroup[usergroup] then 
+                if ply == owner then
+                    return true
+                end
+            elseif ply:GetNWString( "is_admined", false) then
+                return true
+                
+            end
+        end
+    end
+end
+do  -- if ply:GetNWString( "is_admined", false) then return true end
+    -- adding disallows for when user is in adminmode
     local disallow = function(ply)
         if ply:GetNWString( "is_admined", false) then
             return false
@@ -74,6 +118,27 @@ do
             return sAdmin.hasPermission(ply, "phys_players") and ply:GetNWString( "is_admined", false) and (tonumber(sAdmin.hasPermission(ply, "immunity")) or 0) >= (tonumber(sAdmin.hasPermission(ent, "immunity")) or 0)
         end
     end)
+    -- overriding the Gprotect physgun pickup
+    hook.Remove( "PhysgunPickup", "sA:AdminPhysgunLogic" )
+    hook.Add("PhysgunPickup", "gP:xAdminmodePhysgunPickupLogic", function(ply, ent, norun)
+        if SERVER and !cfg.enabled then return nil end
+        if TCF and TCF.Config and ent:GetClass() == "cocaine_cooking_pot" and IsValid( ent:GetParent() ) then return nil end --- Compatibilty with the cocaine factory.
+    
+        if ent:IsPlayer() then return nil end
+    
+        if SERVER then
+            local servercheck = xHandlePhysgunPermission(ply, ent)
+            if isbool(servercheck) then
+                local result = false
+            
+                if servercheck then result = nil end
+    
+                return result
+            end
+        end
+        
+        return gProtect.HandlePermissions(ply, ent, "weapon_physgun")
+    end )
 end
 
 if(CLIENT) then
