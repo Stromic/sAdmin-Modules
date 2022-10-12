@@ -126,7 +126,7 @@ if(CLIENT) then
         if !ply:GetNWString( "is_admined", false) then
             return
         elseif ply:GetNWString( "is_admined", false) then
-            --BlurRect(ScrW() / 2 - scale(250), scale(163) + scale(ypos), scale(500), scale(70), 130)
+            -- BlurRect(ScrW() / 2 - scale(250), scale(163) + scale(ypos), scale(500), scale(70), 130)
     
             draw.SimpleText("Adminmode Enabled", "JailedFont", scale(964), scale(192) - scale(20) + scale(ypos), color_black, 1) -- Adminmode Shadow/Outline
             draw.SimpleText("Adminmode Enabled", "JailedFont", scale(960), scale(188) - scale(20) + scale(ypos), color_white, 1) -- Adminmode Text
