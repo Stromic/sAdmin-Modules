@@ -1,3 +1,5 @@
+sAdmin.secondary_rank_timeleft = sAdmin.secondary_rank_timeleft or {}
+
 local function storeSecondaryRank(sid64, new_rank, time, no_save)
     local ply = slib.sid64ToPly[sid64]
 
@@ -15,7 +17,9 @@ local function storeSecondaryRank(sid64, new_rank, time, no_save)
         ply:SetNWString("sA:SecondaryRank", new_rank)
 
         if time and time > 0 then
-            timer.Create("sA:RevertSecondaryRank", time, 1, function() storeSecondaryRank(sid64, "") end)
+            sAdmin.secondary_rank_timeleft[ply] = time
+
+            timer.Create("sA:RevertSecondaryRank_"..sid64, time, 1, function() storeSecondaryRank(sid64, "") end)
         end
     end
 end
@@ -94,6 +98,34 @@ sAdmin.addCommand({
     end
 })
 
+sAdmin.addCommand({
+    name = "secondaryrank",
+    category = "Utility",
+    inputs = {{"player", "player_name"}},
+    func = function(ply, args, silent)
+        local targets = sAdmin.getTargets("secondaryrank", ply, args[1], 1)
+
+        local target
+
+        for k,v in ipairs(targets) do
+            target = v
+            
+            break
+        end
+
+        if !target then return end
+
+        local secondary_rank = target:GetSecondaryUserGroup()
+        local timeleft = sAdmin.secondary_rank_timeleft[target]
+
+        if secondary_rank and secondary_rank != "" then
+            sAdmin.msg(ply, "secondaryrank_response", target:Nick(), secondary_rank, timeleft and sAdmin.formatTime(timeleft, true) or slib.getLang("sadmin", sAdmin.config["language"], "eternity"))
+        else
+            sAdmin.msg(ply, "secondaryrank_norank_response", target:Nick())
+        end
+    end
+})
+
 hook.Add("slib.FullLoaded", "sA:LoadSecondaryRank", function(ply)
     local sid64 = ply:SteamID64()
     local data = file.Read("sadmin/secondaryrank/"..sid64..".json", "DATA")
@@ -130,12 +162,15 @@ function meta:SetSecondaryUserGroup(usergroup, time) -- The time in here is in s
     self:SetNWString("sA:SecondaryRank", usergroup)
 end
 
+slib.setLang("sadmin", "en", "secondaryrank_response", "%s's secondary rank is %s for %s.")
+slib.setLang("sadmin", "en", "secondaryrank_norank_response", "%s doesnt have a secondary rank.")
 
 slib.setLang("sadmin", "en", "setsecondaryrank_response", "%s set the secondary rank for %s to %s for %t.")
 slib.setLang("sadmin", "en", "setsecondaryrankid_response", "%s set the secondary rank for %s to %s for %t.")
 slib.setLang("sadmin", "en", "removesecondaryrank_response", "%s removed %s's secondary rank.")
 slib.setLang("sadmin", "en", "removesecondaryrankid_response", "%s removed %s's secondary rank.")
 
+slib.setLang("sadmin", "en", "secondaryrank_help", "This will print information about the secondary rank")
 slib.setLang("sadmin", "en", "setsecondaryrank_help", "This will set the secondary rank of a specified player!")
 slib.setLang("sadmin", "en", "setsecondaryrankid_help", "This will set the secondary rank of a specified SteamID64!")
 slib.setLang("sadmin", "en", "removesecondaryrank_help", "This will reset the secondary rank of a specified player!")
