@@ -161,7 +161,7 @@ if SERVER then
         if !v then continue end
 
         hook.Add(k, "sA:DisallowInAdminMode", function(ply)
-            if sAdmin.InAdminMode[ply] then
+            if sAdmin.AdminMode.Active[ply] then
                 return false
             end
         end)
