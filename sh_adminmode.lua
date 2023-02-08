@@ -104,7 +104,7 @@ local function exitAdminMode(ply)
     end
 
     if ply.sAdminAdminModData.job then
-        ply:changeJob(ply.sAdminAdminModData.job, true)
+        ply:changeTeam(ply.sAdminAdminModData.job, true)
     end
 
     if sAdmin.AdminMode.Config.EnableGodmode and !ply:IsBot() then
