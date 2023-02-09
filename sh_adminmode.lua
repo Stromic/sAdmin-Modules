@@ -12,7 +12,7 @@ sAdmin.AdminMode = sAdmin.AdminMode or {Active = {}, Config = {}}
 
 sAdmin.AdminMode.Config.AdminModeModel = "models/player/combine_super_soldier.mdl" -- This is the playermodel the admin will have when in admin mode, leave blank to disable.
 
-sAdmin.AdminMode.Config.AdminModeJob = "Civil Protection" -- Leave blank to disable, this will change your job to the selected one. (Make it the job name)
+sAdmin.AdminMode.Config.AdminModeJob = "" -- Leave blank to disable, this will change your job to the selected one. (Make it the job name)
 
 sAdmin.AdminMode.Config.EnableGodmode = true -- Should we automatically enable godmode when you ented admin mode?
 
