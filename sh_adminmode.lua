@@ -12,7 +12,7 @@ sAdmin.AdminMode = sAdmin.AdminMode or {Active = {}, Config = {}}
 
 sAdmin.AdminMode.Config.AdminModeModel = "models/player/combine_super_soldier.mdl" -- This is the playermodel the admin will have when in admin mode, leave blank to disable.
 
-sAdmin.AdminMode.Config.AdminModeJob = "" -- Leave blank to disable, this will change your job to the selected one. (Make it the job name)
+sAdmin.AdminMode.Config.AdminModeJob = "Civil Protection" -- Leave blank to disable, this will change your job to the selected one. (Make it the job name)
 
 sAdmin.AdminMode.Config.EnableGodmode = true -- Should we automatically enable godmode when you ented admin mode?
 
@@ -85,7 +85,7 @@ local function enterAdminMode(ply)
         if job != nil then
             ply.sAdminAdminModData.job = ply:Team()
 
-            ply:changeTeam(job, true)
+            ply:changeTeam(job, true, true, true)
         end
     end
 
@@ -99,20 +99,21 @@ local function enterAdminMode(ply)
 end
 
 local function exitAdminMode(ply)
+    sAdmin.AdminMode.Active[ply] = nil
+    
     if ply.sAdminAdminModData.mdl then
         ply:SetModel(ply.sAdminAdminModData.mdl)
-    end
-
-    if ply.sAdminAdminModData.job then
-        ply:changeTeam(ply.sAdminAdminModData.job, true)
     end
 
     if sAdmin.AdminMode.Config.EnableGodmode and !ply:IsBot() then
         sAdmin.godded[ply:SteamID64()] = nil
     end
 
+    if ply.sAdminAdminModData.job then
+        ply:changeTeam(ply.sAdminAdminModData.job, true, true, true)
+    end
+
     ply.sAdminAdminModData = nil
-    sAdmin.AdminMode.Active[ply] = nil
 
     sAdmin.networkData(ply, {"inAdminMode"}, false)
 end
@@ -152,6 +153,34 @@ sAdmin.addCommand({
         end
 
         sAdmin.msg(silent and ply or nil, "unadminmode_response", ply, targets)
+    end
+})
+
+sAdmin.addCommand({
+    name = "adminmode",
+    category = "Utility",
+    inputs = {{"player", "player_name"}},
+    func = function(ply, args, silent)
+        local targets = sAdmin.getTargets("admin", ply, args[1], 1)
+        local target, action
+
+        for k,v in ipairs(targets) do
+            target = v
+
+            break
+        end
+
+        if IsValid(target) then
+            action = sAdmin.AdminMode.Active[target]
+
+            if action then
+                exitAdminMode(target)
+            else
+                enterAdminMode(target)
+            end 
+        end
+
+        sAdmin.msg(silent and ply or nil, action and "unadminmode_response" or "adminmode_response", ply, targets)
     end
 })
 
