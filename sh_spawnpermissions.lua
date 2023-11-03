@@ -1,4 +1,4 @@
--- The purpos of this module is to control spawn permissions via sAdmin, this is traditionally controlled from gProtect or the gamemode.
+-- The purpose of this module is to control spawn permissions via sAdmin, this is traditionally controlled from gProtect or the gamemode.
 
 //  _______              ___ _       
 // (_______)            / __|_)      
@@ -32,7 +32,8 @@ for k,v in ipairs(ignoreHooks) do
     hook.Add(v, "sA:SpawnPermissions", function(ply)
         if !IsValid(ply) then return end
         
-        if !sAdmin.hasPermission(ply, "sA:"..v) then
+        print(v)
+        if !sAdmin.hasPermission(ply, v) then
             sAdmin.msg(ply, "no_permission", v)
 
             return false
