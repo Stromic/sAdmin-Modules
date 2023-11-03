@@ -32,7 +32,6 @@ for k,v in ipairs(ignoreHooks) do
     hook.Add(v, "sA:SpawnPermissions", function(ply)
         if !IsValid(ply) then return end
         
-        print(v)
         if !sAdmin.hasPermission(ply, v) then
             sAdmin.msg(ply, "no_permission", v)
 
