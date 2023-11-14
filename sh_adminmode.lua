@@ -185,12 +185,16 @@ sAdmin.addCommand({
 })
 
 if SERVER then
+    local function canBypassAdminMode(ply)
+        return sAdmin.hasPermission(ply, slib.getLang("sadmin", sAdmin.config["language"], "bypass_admin_mode"))
+    end
+
     -- Disallow certain actions while in admin mode
     for k, v in pairs(sAdmin.AdminMode.Config.DisallowInAdminMode) do
         if !v then continue end
 
         hook.Add(k, "sA:DisallowInAdminMode", function(ply)
-            if sAdmin.AdminMode.Active[ply] then
+            if sAdmin.AdminMode.Active[ply] and !canBypassAdminMode(ply) then
                 return false
             end
         end)
@@ -198,20 +202,20 @@ if SERVER then
 
     -- Prevent physgun enhancer while in admin mode
     hook.Add("sA:OverridePermission", "sA:AdminModePickupPrevent", function(ply, name)
-        if name == "phys_players" and sAdmin.AdminMode.Config.LockPhysgunEnhancerToAdminMode and !sAdmin.AdminMode.Active[ply] then
+        if name == "phys_players" and sAdmin.AdminMode.Config.LockPhysgunEnhancerToAdminMode and !sAdmin.AdminMode.Active[ply] and !canBypassAdminMode(ply) then
             return false
         end
     end)
 
     hook.Add("sA:CanNoclip", "sA:AdminModePreventNoclip", function(ply)
-        if sAdmin.AdminMode.Config.AdminModeCommands["noclip"] and !sAdmin.AdminMode.Active[ply] then
+        if sAdmin.AdminMode.Config.AdminModeCommands["noclip"] and !sAdmin.AdminMode.Active[ply] and !canBypassAdminMode(ply) then
             sAdmin.msg(ply, "need_adminmode_response", ply, "noclip")
             return false
         end
     end)
 
     hook.Add("sA:RunCommand", "sA:AdminModeCommandPrevent", function(ply, name, args)
-        if sAdmin.AdminMode.Config.AdminModeCommands[name] and !sAdmin.AdminMode.Active[ply] then
+        if sAdmin.AdminMode.Config.AdminModeCommands[name] and !sAdmin.AdminMode.Active[ply] and !canBypassAdminMode(ply) then
             sAdmin.msg(ply, "need_adminmode_response", ply, name)    
         return false end
     end)
@@ -234,3 +238,7 @@ slib.setLang("sadmin", "en", "in_adminmode_response", "%s is already in adminmod
 slib.setLang("sadmin", "en", "no_adminmode_response", "%s is not in adminmode.")
 
 slib.setLang("sadmin", "en", "need_adminmode_response", "%s have to be in adminmode to use %s.")
+
+slib.setLang("sadmin", "en", "bypass_admin_mode", "Bypass adminmode")
+
+sAdmin.registerPermission(slib.getLang("sadmin", sAdmin.config["language"], "bypass_admin_mode"), "Management")
