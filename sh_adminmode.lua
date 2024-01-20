@@ -108,11 +108,13 @@ local function exitAdminMode(ply)
     if sAdmin.AdminMode.Config.EnableGodmode and !ply:IsBot() then
         sAdmin.godded[ply:SteamID64()] = nil
     end
-
+        
     if ply.sAdminAdminModData.job then
         ply:changeTeam(ply.sAdminAdminModData.job, true, true, true)
     end
 
+    ply:SetMoveType(MOVETYPE_WALK)
+        
     ply.sAdminAdminModData = nil
 
     sAdmin.networkData(ply, {"inAdminMode"}, false)
