@@ -23,6 +23,7 @@ local ignoreHooks = { -- Theese are the hooks that can be controlled in sAdmin
     "PlayerSpawnRagdoll",
     "PlayerSpawnSENT",
     "PlayerSpawnSWEP",
+    "PlayerGiveSWEP",
     "PlayerSpawnVehicle"
 }
 
@@ -49,4 +50,5 @@ slib.setLang("sadmin", "en", "PlayerSpawnProp", "Spawn Prop")
 slib.setLang("sadmin", "en", "PlayerSpawnRagdoll", "Spawn Ragdoll")
 slib.setLang("sadmin", "en", "PlayerSpawnSENT", "Spawn SENT")
 slib.setLang("sadmin", "en", "PlayerSpawnSWEP", "Spawn SWEP")
+slib.setLang("sadmin", "en", "PlayerGiveSWEP", "Spawn SWEP")
 slib.setLang("sadmin", "en", "PlayerSpawnVehicle", "Spawn Vehicle")
