@@ -148,7 +148,7 @@ hook.Add("PostGamemodeLoaded", "sA:LoadTTT", function()
     sAdmin.addCommand({
         name = "setslaynr",
         category = "TTT",
-        inputs = {{"player", "player_name"}, {"numeric", "amount"},
+        inputs = {{"player", "player_name"}, {"numeric", "amount"}},
         func = function(ply, args, silent)
             local targets = sAdmin.getTargets("setslaynr", ply, args[1], 1)
             local amount = tonumber(args[2]) or 0
@@ -164,7 +164,7 @@ hook.Add("PostGamemodeLoaded", "sA:LoadTTT", function()
     sAdmin.addCommand({
         name = "addslaynr",
         category = "TTT",
-        inputs = {{"player", "player_name"}, {"numeric", "amount"},
+        inputs = {{"player", "player_name"}, {"numeric", "amount"}},
         func = function(ply, args, silent)
             local targets = sAdmin.getTargets("addslaynr", ply, args[1], 1)
             local amount = tonumber(args[2]) or 0
